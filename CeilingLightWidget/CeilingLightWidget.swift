@@ -2,7 +2,7 @@
 //  CeilingLightWidget.swift
 //  CeilingLightWidget
 //
-//  Created by 马杨 on 2025/4/3.
+//  Created by 马杨 on 2025/4/2.
 //
 
 import WidgetKit
@@ -10,52 +10,59 @@ import SwiftUI
 
 struct Provider: TimelineProvider {
     func placeholder(in context: Context) -> SimpleEntry {
-        SimpleEntry(date: Date(), emoji: "😀")
+        SimpleEntry(date: Date(), isLightOn: true, brightness: 50, colorTemperature: 4000)
     }
 
-    func getSnapshot(in context: Context, completion: @escaping (SimpleEntry) -> ()) {
-        let entry = SimpleEntry(date: Date(), emoji: "😀")
+    func getSnapshot(in context: Context, completion: @escaping (SimpleEntry) -> Void) {
+        let defaults = UserDefaults.standard
+        let isLightOn = defaults.bool(forKey: "isLightOn")
+        let brightness = defaults.integer(forKey: "brightness")
+        let colorTemperature = defaults.integer(forKey: "colorTemperature")
+
+        let entry = SimpleEntry(date: Date(), isLightOn: isLightOn, brightness: brightness, colorTemperature: colorTemperature)
         completion(entry)
     }
 
-    func getTimeline(in context: Context, completion: @escaping (Timeline<Entry>) -> ()) {
-        var entries: [SimpleEntry] = []
+    func getTimeline(in context: Context, completion: @escaping (Timeline<SimpleEntry>) -> Void) {
+        let defaults = UserDefaults.standard
+        let isLightOn = defaults.bool(forKey: "isLightOn")
+        let brightness = defaults.integer(forKey: "brightness")
+        let colorTemperature = defaults.integer(forKey: "colorTemperature")
 
-        // Generate a timeline consisting of five entries an hour apart, starting from the current date.
         let currentDate = Date()
-        for hourOffset in 0 ..< 5 {
-            let entryDate = Calendar.current.date(byAdding: .hour, value: hourOffset, to: currentDate)!
-            let entry = SimpleEntry(date: entryDate, emoji: "😀")
-            entries.append(entry)
-        }
+        let entry = SimpleEntry(date: currentDate, isLightOn: isLightOn, brightness: brightness, colorTemperature: colorTemperature)
 
-        let timeline = Timeline(entries: entries, policy: .atEnd)
+        let timeline = Timeline(entries: [entry], policy: .atEnd)
         completion(timeline)
     }
-
-//    func relevances() async -> WidgetRelevances<Void> {
-//        // Generate a list containing the contexts this widget is relevant in.
-//    }
 }
 
 struct SimpleEntry: TimelineEntry {
     let date: Date
-    let emoji: String
+    let isLightOn: Bool
+    let brightness: Int
+    let colorTemperature: Int
 }
 
-struct CeilingLightWidgetEntryView : View {
+struct CeilingLightWidgetEntryView: View {
     var entry: Provider.Entry
 
     var body: some View {
         VStack {
-            HStack {
-                Text("Time:")
-                Text(entry.date, style: .time)
-            }
+            Text(entry.isLightOn ? "Light: ON" : "Light: OFF")
+                .font(.headline)
+                .foregroundColor(entry.isLightOn ? .green : .red)
+                .padding(.bottom, 10)
 
-            Text("Emoji:")
-            Text(entry.emoji)
+            Text("Brightness: \(entry.brightness)%")
+                .font(.caption)
+                .padding(.bottom, 5)
+
+            Text("Color Temp: \(entry.colorTemperature)K")
+                .font(.caption)
         }
+        .padding()
+        .containerBackground(Color.blue, for: .widget) // 添加 containerBackground 修饰符
     }
 }
 
@@ -64,16 +71,10 @@ struct CeilingLightWidget: Widget {
 
     var body: some WidgetConfiguration {
         StaticConfiguration(kind: kind, provider: Provider()) { entry in
-            if #available(macOS 14.0, *) {
-                CeilingLightWidgetEntryView(entry: entry)
-                    .containerBackground(.fill.tertiary, for: .widget)
-            } else {
-                CeilingLightWidgetEntryView(entry: entry)
-                    .padding()
-                    .background()
-            }
+            CeilingLightWidgetEntryView(entry: entry)
         }
-        .configurationDisplayName("My Widget")
-        .description("This is an example widget.")
+        .configurationDisplayName("Ceiling Light Widget")
+        .description("Displays the current state of your ceiling light.")
+        .supportedFamilies([.systemSmall, .systemMedium])
     }
 }
