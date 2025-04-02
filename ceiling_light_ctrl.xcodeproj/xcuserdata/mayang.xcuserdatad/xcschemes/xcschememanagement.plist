@@ -4,10 +4,43 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
+		<key>CeilingLightWidgetExtension.xcscheme_^#shared#^_</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>1</integer>
+		</dict>
 		<key>ceiling_light_ctrl.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
 			<integer>0</integer>
+		</dict>
+	</dict>
+	<key>SuppressBuildableAutocreation</key>
+	<dict>
+		<key>B01AC6E72D9BC66D003EE704</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>B01AC6F52D9BC66F003EE704</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>B01AC6FF2D9BC66F003EE704</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>B01AC7162D9C0BCE003EE704</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>B0431E702D9D82C8001E59FF</key>
+		<dict>
+			<key>primary</key>
+			<true/>
 		</dict>
 	</dict>
 </dict>

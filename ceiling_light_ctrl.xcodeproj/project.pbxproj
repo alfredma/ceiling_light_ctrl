@@ -6,6 +6,12 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		B0431E8F2D9DB33C001E59FF /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B01AC7192D9C0BCE003EE704 /* WidgetKit.framework */; };
+		B0431E902D9DB33C001E59FF /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B01AC71B2D9C0BCF003EE704 /* SwiftUI.framework */; };
+		B0431E9C2D9DB33E001E59FF /* CeilingLightWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = B0431E8E2D9DB33C001E59FF /* CeilingLightWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		B01AC6F72D9BC66F003EE704 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -21,13 +27,61 @@
 			remoteGlobalIDString = B01AC6E72D9BC66D003EE704;
 			remoteInfo = ceiling_light_ctrl;
 		};
+		B01AC74A2D9D4AEA003EE704 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B01AC6E02D9BC66D003EE704 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = B0431E8D2D9DB33C001E59FF;
+			remoteInfo = CeilingLightWidgetExtension;
+		};
+		B0431E7D2D9D82CB001E59FF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B01AC6E02D9BC66D003EE704 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = B0431E8D2D9DB33C001E59FF;
+			remoteInfo = CeilingLightWidgetExtension;
+		};
+		B0431E9A2D9DB33E001E59FF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B01AC6E02D9BC66D003EE704 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = B0431E8D2D9DB33C001E59FF;
+			remoteInfo = CeilingLightWidgetExtension;
+		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		B01AC7352D9D435F003EE704 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				B0431E9C2D9DB33E001E59FF /* CeilingLightWidgetExtension.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		B01AC6E82D9BC66D003EE704 /* ceiling_light_ctrl.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ceiling_light_ctrl.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B01AC6F62D9BC66F003EE704 /* ceiling_light_ctrlTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ceiling_light_ctrlTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B01AC7002D9BC66F003EE704 /* ceiling_light_ctrlUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ceiling_light_ctrlUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		B01AC7192D9C0BCE003EE704 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
+		B01AC71B2D9C0BCF003EE704 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
+		B0431E8E2D9DB33C001E59FF /* CeilingLightWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = CeilingLightWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		B0431E9D2D9DB33E001E59FF /* Exceptions for "CeilingLightWidget" folder in "CeilingLightWidgetExtension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = B0431E8D2D9DB33C001E59FF /* CeilingLightWidgetExtension */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		B01AC6EA2D9BC66D003EE704 /* ceiling_light_ctrl */ = {
@@ -43,6 +97,14 @@
 		B01AC7032D9BC66F003EE704 /* ceiling_light_ctrlUITests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = ceiling_light_ctrlUITests;
+			sourceTree = "<group>";
+		};
+		B0431E912D9DB33C001E59FF /* CeilingLightWidget */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				B0431E9D2D9DB33E001E59FF /* Exceptions for "CeilingLightWidget" folder in "CeilingLightWidgetExtension" target */,
+			);
+			path = CeilingLightWidget;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -69,6 +131,15 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		B0431E8B2D9DB33C001E59FF /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B0431E902D9DB33C001E59FF /* SwiftUI.framework in Frameworks */,
+				B0431E8F2D9DB33C001E59FF /* WidgetKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -78,6 +149,8 @@
 				B01AC6EA2D9BC66D003EE704 /* ceiling_light_ctrl */,
 				B01AC6F92D9BC66F003EE704 /* ceiling_light_ctrlTests */,
 				B01AC7032D9BC66F003EE704 /* ceiling_light_ctrlUITests */,
+				B0431E912D9DB33C001E59FF /* CeilingLightWidget */,
+				B01AC7182D9C0BCE003EE704 /* Frameworks */,
 				B01AC6E92D9BC66D003EE704 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -88,8 +161,18 @@
 				B01AC6E82D9BC66D003EE704 /* ceiling_light_ctrl.app */,
 				B01AC6F62D9BC66F003EE704 /* ceiling_light_ctrlTests.xctest */,
 				B01AC7002D9BC66F003EE704 /* ceiling_light_ctrlUITests.xctest */,
+				B0431E8E2D9DB33C001E59FF /* CeilingLightWidgetExtension.appex */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		B01AC7182D9C0BCE003EE704 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				B01AC7192D9C0BCE003EE704 /* WidgetKit.framework */,
+				B01AC71B2D9C0BCF003EE704 /* SwiftUI.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -102,10 +185,14 @@
 				B01AC6E42D9BC66D003EE704 /* Sources */,
 				B01AC6E52D9BC66D003EE704 /* Frameworks */,
 				B01AC6E62D9BC66D003EE704 /* Resources */,
+				B01AC7352D9D435F003EE704 /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				B01AC74B2D9D4AEA003EE704 /* PBXTargetDependency */,
+				B0431E7E2D9D82CB001E59FF /* PBXTargetDependency */,
+				B0431E9B2D9DB33E001E59FF /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				B01AC6EA2D9BC66D003EE704 /* ceiling_light_ctrl */,
@@ -163,6 +250,28 @@
 			productReference = B01AC7002D9BC66F003EE704 /* ceiling_light_ctrlUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
+		B0431E8D2D9DB33C001E59FF /* CeilingLightWidgetExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B0431E9E2D9DB33E001E59FF /* Build configuration list for PBXNativeTarget "CeilingLightWidgetExtension" */;
+			buildPhases = (
+				B0431E8A2D9DB33C001E59FF /* Sources */,
+				B0431E8B2D9DB33C001E59FF /* Frameworks */,
+				B0431E8C2D9DB33C001E59FF /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				B0431E912D9DB33C001E59FF /* CeilingLightWidget */,
+			);
+			name = CeilingLightWidgetExtension;
+			packageProductDependencies = (
+			);
+			productName = CeilingLightWidgetExtension;
+			productReference = B0431E8E2D9DB33C001E59FF /* CeilingLightWidgetExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -184,6 +293,9 @@
 						CreatedOnToolsVersion = 16.3;
 						TestTargetID = B01AC6E72D9BC66D003EE704;
 					};
+					B0431E8D2D9DB33C001E59FF = {
+						CreatedOnToolsVersion = 16.3;
+					};
 				};
 			};
 			buildConfigurationList = B01AC6E32D9BC66D003EE704 /* Build configuration list for PBXProject "ceiling_light_ctrl" */;
@@ -203,6 +315,7 @@
 				B01AC6E72D9BC66D003EE704 /* ceiling_light_ctrl */,
 				B01AC6F52D9BC66F003EE704 /* ceiling_light_ctrlTests */,
 				B01AC6FF2D9BC66F003EE704 /* ceiling_light_ctrlUITests */,
+				B0431E8D2D9DB33C001E59FF /* CeilingLightWidgetExtension */,
 			);
 		};
 /* End PBXProject section */
@@ -223,6 +336,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		B01AC6FE2D9BC66F003EE704 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B0431E8C2D9DB33C001E59FF /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -253,6 +373,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		B0431E8A2D9DB33C001E59FF /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -265,6 +392,21 @@
 			isa = PBXTargetDependency;
 			target = B01AC6E72D9BC66D003EE704 /* ceiling_light_ctrl */;
 			targetProxy = B01AC7012D9BC66F003EE704 /* PBXContainerItemProxy */;
+		};
+		B01AC74B2D9D4AEA003EE704 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = B0431E8D2D9DB33C001E59FF /* CeilingLightWidgetExtension */;
+			targetProxy = B01AC74A2D9D4AEA003EE704 /* PBXContainerItemProxy */;
+		};
+		B0431E7E2D9D82CB001E59FF /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = B0431E8D2D9DB33C001E59FF /* CeilingLightWidgetExtension */;
+			targetProxy = B0431E7D2D9D82CB001E59FF /* PBXContainerItemProxy */;
+		};
+		B0431E9B2D9DB33E001E59FF /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = B0431E8D2D9DB33C001E59FF /* CeilingLightWidgetExtension */;
+			targetProxy = B0431E9A2D9DB33E001E59FF /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -321,6 +463,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
@@ -376,6 +519,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
@@ -388,11 +532,15 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CODE_SIGN_ENTITLEMENTS = ceiling_light_ctrl/ceiling_light_ctrl.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = WM5UXJ5VUR;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = CeilingLightCtrl;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -408,14 +556,14 @@
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 15.3;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "mayang.ceiling-light-ctrl";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.mayang.ceiling-light-ctrl";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = YES;
 				SDKROOT = auto;
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
+				SUPPORTED_PLATFORMS = macosx;
+				SUPPORTS_MACCATALYST = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2,7";
 				XROS_DEPLOYMENT_TARGET = 2.4;
 			};
 			name = Debug;
@@ -425,11 +573,15 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CODE_SIGN_ENTITLEMENTS = ceiling_light_ctrl/ceiling_light_ctrl.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = WM5UXJ5VUR;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = CeilingLightCtrl;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -445,14 +597,14 @@
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 15.3;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "mayang.ceiling-light-ctrl";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.mayang.ceiling-light-ctrl";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = YES;
 				SDKROOT = auto;
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
+				SUPPORTED_PLATFORMS = macosx;
+				SUPPORTS_MACCATALYST = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2,7";
 				XROS_DEPLOYMENT_TARGET = 2.4;
 			};
 			name = Release;
@@ -463,6 +615,7 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = WM5UXJ5VUR;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 18.4;
 				MACOSX_DEPLOYMENT_TARGET = 15.3;
@@ -470,10 +623,10 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "mayang.ceiling-light-ctrlTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
+				SUPPORTED_PLATFORMS = macosx;
+				SUPPORTS_MACCATALYST = NO;
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2,7";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ceiling_light_ctrl.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/ceiling_light_ctrl";
 				XROS_DEPLOYMENT_TARGET = 2.4;
 			};
@@ -485,6 +638,7 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = WM5UXJ5VUR;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 18.4;
 				MACOSX_DEPLOYMENT_TARGET = 15.3;
@@ -492,10 +646,10 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "mayang.ceiling-light-ctrlTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
+				SUPPORTED_PLATFORMS = macosx;
+				SUPPORTS_MACCATALYST = NO;
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2,7";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ceiling_light_ctrl.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/ceiling_light_ctrl";
 				XROS_DEPLOYMENT_TARGET = 2.4;
 			};
@@ -506,6 +660,7 @@
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = WM5UXJ5VUR;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 18.4;
 				MACOSX_DEPLOYMENT_TARGET = 15.3;
@@ -513,10 +668,10 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "mayang.ceiling-light-ctrlUITests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
+				SUPPORTED_PLATFORMS = macosx;
+				SUPPORTS_MACCATALYST = NO;
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2,7";
 				TEST_TARGET_NAME = ceiling_light_ctrl;
 				XROS_DEPLOYMENT_TARGET = 2.4;
 			};
@@ -527,6 +682,7 @@
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = WM5UXJ5VUR;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 18.4;
 				MACOSX_DEPLOYMENT_TARGET = 15.3;
@@ -534,12 +690,72 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "mayang.ceiling-light-ctrlUITests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
+				SUPPORTED_PLATFORMS = macosx;
+				SUPPORTS_MACCATALYST = NO;
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2,7";
 				TEST_TARGET_NAME = ceiling_light_ctrl;
 				XROS_DEPLOYMENT_TARGET = 2.4;
+			};
+			name = Release;
+		};
+		B0431E9F2D9DB33E001E59FF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = CeilingLightWidget/CeilingLightWidget.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = WM5UXJ5VUR;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = CeilingLightWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = CeilingLightWidget;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@executable_path/../../../../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 15.3;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.mayang.ceiling-light-ctrl.CeilingLightWidget";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		B0431EA02D9DB33E001E59FF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = CeilingLightWidget/CeilingLightWidget.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = WM5UXJ5VUR;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = CeilingLightWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = CeilingLightWidget;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@executable_path/../../../../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 15.3;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.mayang.ceiling-light-ctrl.CeilingLightWidget";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
 		};
@@ -578,6 +794,15 @@
 			buildConfigurations = (
 				B01AC7112D9BC66F003EE704 /* Debug */,
 				B01AC7122D9BC66F003EE704 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		B0431E9E2D9DB33E001E59FF /* Build configuration list for PBXNativeTarget "CeilingLightWidgetExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B0431E9F2D9DB33E001E59FF /* Debug */,
+				B0431EA02D9DB33E001E59FF /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
