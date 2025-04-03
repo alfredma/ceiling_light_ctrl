@@ -39,6 +39,15 @@ class LightController {
         return nil
     }
 
+    func refreshDeviceState() {
+        if let result = runPythonScript(command: "get"),
+           let state = parseLightState(result: result) {
+            self.isLightOn = state.isLightOn
+            self.brightness = state.brightness
+            self.colorTemperature = state.colorTemperature
+        }
+    }
+
     func saveLightStateToFile() {
         let fileManager = FileManager.default
         if let documentDirectory = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first {

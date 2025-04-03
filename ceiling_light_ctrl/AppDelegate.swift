@@ -178,29 +178,33 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     // 菜单弹出时更新滑动条状态
     func menuWillOpen(_ menu: NSMenu) {
         // 获取当前状态
+        lightController.refreshDeviceState()
         let currentBrightness = lightController.getCurrentBrightness()
         let currentColorTemp = lightController.getCurrentColorTemperature()
         print("Current Brightness: \(currentBrightness)%")
         print("Current Color Temperature: \(currentColorTemp)K")
 
-        // 更新亮度滑动条
-        if let brightnessItem = menu.items.first(where: { ($0.view?.subviews.contains(where: { $0 is NSSlider }) ?? false) }) {
-            if let slider = brightnessItem.view?.subviews.compactMap({ $0 as? NSSlider }).first {
-                slider.doubleValue = currentBrightness
-                if let container = slider.superview as? NSStackView,
-                   let titleLabel = container.arrangedSubviews.first as? NSTextField {
-                    titleLabel.stringValue = "Brightness: \(Int(currentBrightness))%"
+        // 更新UI（确保在主线程）
+        DispatchQueue.main.async {
+            // 更新亮度滑动条
+            if let brightnessItem = menu.items.first(where: { ($0.view?.subviews.contains(where: { $0 is NSSlider }) ?? false) }) {
+                if let slider = brightnessItem.view?.subviews.compactMap({ $0 as? NSSlider }).first {
+                    slider.doubleValue = currentBrightness
+                    if let container = slider.superview as? NSStackView,
+                    let titleLabel = container.arrangedSubviews.first as? NSTextField {
+                        titleLabel.stringValue = "Brightness: \(Int(currentBrightness))%"
+                    }
                 }
             }
-        }
 
-        // 更新色温滑动条
-        if let colorTempItem = menu.items.last(where: { ($0.view?.subviews.contains(where: { $0 is NSSlider }) ?? false) }) {
-            if let slider = colorTempItem.view?.subviews.compactMap({ $0 as? NSSlider }).first {
-                slider.doubleValue = currentColorTemp
-                if let container = slider.superview as? NSStackView,
-                   let titleLabel = container.arrangedSubviews.first as? NSTextField {
-                    titleLabel.stringValue = "Color Temperature: \(Int(currentColorTemp))K"
+            // 更新色温滑动条
+            if let colorTempItem = menu.items.last(where: { ($0.view?.subviews.contains(where: { $0 is NSSlider }) ?? false) }) {
+                if let slider = colorTempItem.view?.subviews.compactMap({ $0 as? NSSlider }).first {
+                    slider.doubleValue = currentColorTemp
+                    if let container = slider.superview as? NSStackView,
+                    let titleLabel = container.arrangedSubviews.first as? NSTextField {
+                        titleLabel.stringValue = "Color Temperature: \(Int(currentColorTemp))K"
+                    }
                 }
             }
         }
