@@ -19,18 +19,37 @@ struct Provider: TimelineProvider {
         let brightness = defaults.integer(forKey: "brightness")
         let colorTemperature = defaults.integer(forKey: "colorTemperature")
 
+        print("Widget Snapshot - isLightOn: \(isLightOn), brightness: \(brightness), colorTemperature: \(colorTemperature)")
+
         let entry = SimpleEntry(date: Date(), isLightOn: isLightOn, brightness: brightness, colorTemperature: colorTemperature)
         completion(entry)
     }
 
-    func getTimeline(in context: Context, completion: @escaping (Timeline<SimpleEntry>) -> Void) {
-        let defaults = UserDefaults.standard
-        let isLightOn = defaults.bool(forKey: "isLightOn")
-        let brightness = defaults.integer(forKey: "brightness")
-        let colorTemperature = defaults.integer(forKey: "colorTemperature")
+    func readLightStateFromFile() -> (isLightOn: Bool, brightness: Int, colorTemperature: Int) {
+        let fileManager = FileManager.default
+        if let documentDirectory = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first {
+            let fileURL = documentDirectory.appendingPathComponent("lightState.json")
+            do {
+                let data = try Data(contentsOf: fileURL)
+                if let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
+                    let isLightOn = json["isLightOn"] as? Bool ?? false
+                    let brightness = json["brightness"] as? Int ?? 50
+                    let colorTemperature = json["colorTemperature"] as? Int ?? 4000
+                    return (isLightOn, brightness, colorTemperature)
+                }
+            } catch {
+                print("Failed to read light state from file: \(error)")
+            }
+        } else {
+            print("Failed to get document directory.")
+        }
+        return (false, 50, 4000) // 默认值
+    }
 
+    func getTimeline(in context: Context, completion: @escaping (Timeline<SimpleEntry>) -> Void) {
+        let lightState = readLightStateFromFile()
         let currentDate = Date()
-        let entry = SimpleEntry(date: currentDate, isLightOn: isLightOn, brightness: brightness, colorTemperature: colorTemperature)
+        let entry = SimpleEntry(date: currentDate, isLightOn: lightState.isLightOn, brightness: lightState.brightness, colorTemperature: lightState.colorTemperature)
 
         let timeline = Timeline(entries: [entry], policy: .atEnd)
         completion(timeline)
@@ -62,7 +81,7 @@ struct CeilingLightWidgetEntryView: View {
                 .font(.caption)
         }
         .padding()
-        .containerBackground(Color.blue, for: .widget) // 添加 containerBackground 修饰符
+        .containerBackground(Color.black, for: .widget) // 添加 containerBackground 修饰符
     }
 }
 

@@ -6,6 +6,8 @@
 //
 
 import SwiftUI
+import WidgetKit
+//import PythonKit
 
 struct ContentView: View {
     @State private var colorTemperature: Double = 4000 // 默认色温为 4000K
@@ -25,7 +27,7 @@ struct ContentView: View {
                 // 开灯按钮
                 Button(isLightOn ? "Light Off" : "Light On") {
                     isLightOn.toggle()
-                    runPythonScript(command: isLightOn ? "on" : "off")
+                    runEmbeddedExecutable(command: isLightOn ? "on" : "off")
                 }
                 .padding()
                 
@@ -60,7 +62,7 @@ struct ContentView: View {
                             in: 2700...6500,
                             step: 100,
                             onEditingChanged: { _ in
-                                runPythonScript(command: "colortemp", value: Int(colorTemperature))
+                                runEmbeddedExecutable(command: "colortemp", value: Int(colorTemperature))
                             }
                         )
                         .padding()
@@ -115,7 +117,7 @@ struct ContentView: View {
                             in: 0...100,
                             step: 5,
                             onEditingChanged: { _ in
-                                runPythonScript(command: "brightness", value: Int(brightness))
+                                runEmbeddedExecutable(command: "brightness", value: Int(brightness))
                             }
                         )
                         .padding()
@@ -140,7 +142,7 @@ struct ContentView: View {
         .padding()
         .onAppear {
             // 调用脚本获取灯的状态
-            if let result = runPythonScript(command: "get") {
+            if let result = runEmbeddedExecutable(command: "get") {
                 parseLightState(result: result)
             } else {
                 print("Failed to fetch light state. Using default values.")
@@ -150,6 +152,8 @@ struct ContentView: View {
                 colorTemperature = 4000
                 saveLightStateToDefaults()
             }
+            // Reload widget timelines when the app launches
+            WidgetCenter.shared.reloadAllTimelines()
         }
     }
     
@@ -218,6 +222,70 @@ struct ContentView: View {
             return nil
         }
     }
+
+    // 调用嵌入的可执行文件的函数
+    func runEmbeddedExecutable(command: String, value: Int? = nil) -> String? {
+        let process = Process()
+        let pipe = Pipe()
+        let errorPipe = Pipe()
+        process.standardOutput = pipe
+        process.standardError = errorPipe
+
+        // 获取嵌入的可执行文件路径
+        guard let executablePath = Bundle.main.path(forResource: "mjia_iot_light", ofType: nil) else {
+            print("错误：未找到嵌入的可执行文件")
+            return nil
+        }
+
+        process.executableURL = URL(fileURLWithPath: executablePath)
+        var arguments = [command]
+        if let value = value {
+            arguments.append(contentsOf: ["--value", "\(value)"])
+        }
+        process.arguments = arguments
+
+        do {
+            try process.run()
+            process.waitUntilExit()
+
+            guard process.terminationStatus == 0 else {
+                let errorData = errorPipe.fileHandleForReading.readDataToEndOfFile()
+                let errorMessage = String(data: errorData, encoding: .utf8) ?? "Unknown error"
+                print("可执行文件错误: \(errorMessage)")
+                return nil
+            }
+
+            let data = pipe.fileHandleForReading.readDataToEndOfFile()
+            return String(data: data, encoding: .utf8)
+        } catch {
+            print("执行失败: \(error)")
+            return nil
+        }
+    }
+    /*
+    // 使用 PythonKit 调用 Python 脚本的函数
+    func runPythonScriptWithPythonKit(command: String, value: Int? = nil) -> String? {
+        let sys = Python.import("sys")
+        let os = Python.import("os")
+        let json = Python.import("json")
+
+        // 设置 Python 脚本路径
+        guard let scriptPath = Bundle.main.path(forResource: "mjia_iot_light", ofType: "py") else {
+            print("错误：未找到 Python 脚本")
+            return nil
+        }
+
+        sys.path.append(os.path.dirname(scriptPath))
+        let script = Python.import("mjia_iot_light")
+
+        do {
+            let result = script.main(command, value ?? 0)
+            return String(result) ?? nil
+        } catch {
+            print("PythonKit 执行失败: \(error)")
+            return nil
+        }
+    }*/
     
     // 解析灯的状态
     func parseLightState(result: String) {
@@ -242,12 +310,36 @@ struct ContentView: View {
         }
     }
 
+    func saveLightStateToFile() {
+        let fileManager = FileManager.default
+        if let documentDirectory = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first {
+            let fileURL = documentDirectory.appendingPathComponent("lightState.json")
+            let lightState: [String: Any] = [
+                "isLightOn": isLightOn,
+                "brightness": brightness,
+                "colorTemperature": colorTemperature
+            ]
+            do {
+                let data = try JSONSerialization.data(withJSONObject: lightState, options: [])
+                try data.write(to: fileURL)
+                print("Light state saved to file: \(fileURL)")
+            } catch {
+                print("Failed to save light state to file: \(error)")
+            }
+        } else {
+            print("Failed to get document directory.")
+        }
+    }
+
     func saveLightStateToDefaults() {
         let defaults = UserDefaults.standard
         defaults.set(isLightOn, forKey: "isLightOn")
         defaults.set(brightness, forKey: "brightness")
         defaults.set(colorTemperature, forKey: "colorTemperature")
         print("Light state saved to UserDefaults.")
+        
+        // 保存到共享文件
+        saveLightStateToFile()
     }
 }
 
