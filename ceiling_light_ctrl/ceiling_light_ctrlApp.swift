@@ -9,17 +9,21 @@ import SwiftUI
 
 @main
 struct ceiling_light_ctrlApp: App {
-    @Environment(\.scenePhase) private var scenePhase
+    @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
+    //@Environment(\.scenePhase) private var scenePhase
 
     var body: some Scene {
         WindowGroup {
             ContentView()
         }
+        /*
         .windowStyle(DefaultWindowStyle())
         .onChange(of: scenePhase) { _, newPhase in
             if newPhase == .background {
             NSApplication.shared.terminate(nil) // 完全退出应用程序
             }
-        }
+        }*/
     }
 }
+
+

@@ -8,25 +8,30 @@ class LightController {
     
     // 解析灯的状态
     func parseLightState(result: String) -> (isLightOn: Bool, brightness: Double, colorTemperature: Double)? {
-    //func parseLightState(result: String) {
         if let data = result.data(using: .utf8) {
             do {
                 if let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
                     if let power = json["power"] as? String,
                        let brightnessValue = json["brightness"] as? String,
                        let colorTempValue = json["color_temp"] as? String {
+                        
+                        // 更新类的成员变量
+                        self.isLightOn = (power == "on")
+                        self.brightness = Double(brightnessValue) ?? 50.0
+                        self.colorTemperature = Double(colorTempValue) ?? 4000.0
+                        
                         // 保存状态到 UserDefaults
                         saveLightStateToDefaults()
-                        // 更新 SwiftUI 的状态
+                        
+                        // 返回解析结果
                         return (
-                            isLightOn: (power == "on"),
-                            brightness: Double(brightnessValue) ?? 50,
-                            colorTemperature: Double(colorTempValue) ?? 4000
+                            isLightOn: self.isLightOn,
+                            brightness: self.brightness,
+                            colorTemperature: self.colorTemperature
                         )
                     }
                 }
             } catch {
-                print("Failed to parse JSON: \(error)")
                 print("Failed to parse JSON: \(error). Input result: \(result)")
             }
         }
@@ -169,5 +174,13 @@ class LightController {
             print("执行失败: \(error)")
             return nil
         }
+    }
+
+    func getCurrentBrightness() -> Double {
+        return brightness
+    }
+
+    func getCurrentColorTemperature() -> Double {
+        return colorTemperature
     }
 }
