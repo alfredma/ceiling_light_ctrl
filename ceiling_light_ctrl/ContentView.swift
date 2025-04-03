@@ -153,7 +153,6 @@ struct ContentView: View {
                 isLightOn = true
                 brightness = 50
                 colorTemperature = 4000
-                //saveLightStateToDefaults()
             }
             // Reload widget timelines when the app launches
             WidgetCenter.shared.reloadAllTimelines()

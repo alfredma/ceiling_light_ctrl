@@ -19,6 +19,7 @@ class LightController {
                         self.isLightOn = (power == "on")
                         self.brightness = Double(brightnessValue) ?? 50.0
                         self.colorTemperature = Double(colorTempValue) ?? 4000.0
+                        print("Parsed light state: isLightOn: \(self.isLightOn), brightness: \(self.brightness), colorTemperature: \(self.colorTemperature)")
                         
                         // 保存状态到 UserDefaults
                         saveLightStateToDefaults()
@@ -103,6 +104,19 @@ class LightController {
         process.standardOutput = pipe
         process.standardError = errorPipe
         
+        if (command == "brightness" || command == "colortemp") && value == nil {
+            print("错误：命令需要一个值")
+            return nil
+        }
+        if (command == "brightness") {
+            setCurrentBrightness(value: Double(value!))
+        } else if (command == "colortemp") {
+            setCurrentColorTemperature(value: Double(value!))
+        } else if (command == "on") {
+            setCurrentLightState(value: true)
+        } else if (command == "off") {
+            setCurrentLightState(value: false)
+        }
         // 使用嵌入的 Python 脚本路径
         guard let scriptPath = Bundle.main.path(forResource: "mjia_iot_light", ofType: "py") else {
             print("错误：未找到 Python 脚本")
@@ -177,10 +191,34 @@ class LightController {
     }
 
     func getCurrentBrightness() -> Double {
+        print("Current brightness: \(brightness)")
+        print("self brightness: \(self.brightness)")
         return brightness
+    }
+    
+    func setCurrentBrightness(value: Double) {
+        brightness = value
+        print("Set brightness to: \(brightness)")
     }
 
     func getCurrentColorTemperature() -> Double {
+        print("Current color temperature: \(colorTemperature)")
+        print("self color temperature: \(self.colorTemperature)")
         return colorTemperature
+    }
+
+    func setCurrentColorTemperature(value: Double) {
+        colorTemperature = value
+        print("Set color temperature to: \(colorTemperature)")
+    }
+    func getCurrentLightState() -> Bool {
+        print("Current light state: \(isLightOn)")
+        print("self light state: \(self.isLightOn)")
+        return isLightOn
+    }
+
+    func setCurrentLightState(value: Bool) {
+        isLightOn = value
+        print("Set light state to: \(isLightOn)")
     }
 }

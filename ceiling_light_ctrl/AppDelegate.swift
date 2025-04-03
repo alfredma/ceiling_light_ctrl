@@ -180,6 +180,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         // 获取当前状态
         let currentBrightness = lightController.getCurrentBrightness()
         let currentColorTemp = lightController.getCurrentColorTemperature()
+        print("Current Brightness: \(currentBrightness)%")
+        print("Current Color Temperature: \(currentColorTemp)K")
 
         // 更新亮度滑动条
         if let brightnessItem = menu.items.first(where: { ($0.view?.subviews.contains(where: { $0 is NSSlider }) ?? false) }) {
