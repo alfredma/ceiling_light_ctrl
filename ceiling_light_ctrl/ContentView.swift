@@ -9,12 +9,8 @@ import SwiftUI
 import WidgetKit
 
 struct ContentView: View {
-    @State private var colorTemperature: Double = 4000 // 默认色温为 4000K
-    @State private var brightness: Double = 50 // 默认亮度为 50%
-    @State private var isLightOn: Bool = true // 默认开关状态为开
     @Environment(\.scenePhase) private var scenePhase // 监听应用场景状态
-
-    private let lightController = LightController()
+    @ObservedObject private var lightController = LightController.shared // 绑定单例
 
     var body: some View {
         VStack {
@@ -25,13 +21,12 @@ struct ContentView: View {
                 .padding(.bottom, 20)
 
             HStack(alignment: .center) {
-                // 开关按钮
-                Button(isLightOn ? "Light Off" : "Light On") {
-                    isLightOn.toggle()
-                    lightController.runPythonScript(command: isLightOn ? "on" : "off")
+                // 开关按钮绑定
+                Button(lightController.isLightOn ? "Light Off" : "Light On") {
+                       lightController.toggleLight()
                 }
                 .padding()
-                .background(isLightOn ? Color.green : Color.red)
+                .background(lightController.isLightOn ? Color.green : Color.red)
                 .foregroundColor(.white)
                 .cornerRadius(10)
 
@@ -41,7 +36,7 @@ struct ContentView: View {
                 VStack(spacing: 20) {
                     // 色温滑动条
                     VStack {
-                        Text("Color Temperature: \(Int(colorTemperature))K")
+                        Text("Color Temperature: \(Int(lightController.colorTemperature))K")
                             .font(.headline)
                             .padding(.bottom, 10)
 
@@ -64,11 +59,11 @@ struct ContentView: View {
 
                             // 滑动条
                             Slider(
-                                value: $colorTemperature,
+                                value: $lightController.colorTemperature,
                                 in: 2700...6500,
                                 step: 100,
                                 onEditingChanged: { _ in
-                                    lightController.runPythonScript(command: "colortemp", value: Int(colorTemperature))
+                                    lightController.updateColorTemperature()
                                 }
                             )
                             .padding()
@@ -90,7 +85,7 @@ struct ContentView: View {
 
                     // 亮度滑动条
                     VStack {
-                        Text("Brightness: \(Int(brightness))%")
+                        Text("Brightness: \(Int(lightController.brightness))%")
                             .font(.headline)
                             .padding(.bottom, 10)
 
@@ -113,11 +108,11 @@ struct ContentView: View {
 
                             // 滑动条
                             Slider(
-                                value: $brightness,
+                                value: $lightController.brightness,
                                 in: 0...100,
                                 step: 5,
                                 onEditingChanged: { _ in
-                                    lightController.runPythonScript(command: "brightness", value: Int(brightness))
+                                    lightController.updateBrightness()
                                 }
                             )
                             .padding()
@@ -144,15 +139,13 @@ struct ContentView: View {
             // 调用脚本获取灯的状态
             if let result = lightController.runPythonScript(command: "get"),
                 let state = lightController.parseLightState(result: result) {
-                    isLightOn = state.isLightOn
-                    brightness = state.brightness
-                    colorTemperature = state.colorTemperature
+                    print("Fetched light state: \(state)")
             } else {
                 print("Failed to fetch light state. Using default values.")
                 // 设置默认值
-                isLightOn = true
-                brightness = 50
-                colorTemperature = 4000
+                lightController.isLightOn = true
+                lightController.brightness = 50
+                lightController.colorTemperature = 4000
             }
             // Reload widget timelines when the app launches
             WidgetCenter.shared.reloadAllTimelines()

@@ -1,10 +1,15 @@
 import Foundation
 
-class LightController {
+class LightController: ObservableObject {
+    static let shared = LightController()
+    private init() { // 禁止外部实例化
+        // 从 UserDefaults 中加载状态
+        //loadLightStateFromDefaults()
+    }
     // Properties to store light state
-    var isLightOn: Bool = false
-    var brightness: Double = 50.0
-    var colorTemperature: Double = 4000.0
+    @Published var isLightOn: Bool = false
+    @Published var brightness: Double = 50.0
+    @Published var colorTemperature: Double = 4000.0
     
     // 解析灯的状态
     func parseLightState(result: String) -> (isLightOn: Bool, brightness: Double, colorTemperature: Double)? {
@@ -38,7 +43,7 @@ class LightController {
         }
         return nil
     }
-
+    
     func refreshDeviceState() {
         if let result = runPythonScript(command: "get"),
            let state = parseLightState(result: result) {
@@ -46,6 +51,19 @@ class LightController {
             self.brightness = state.brightness
             self.colorTemperature = state.colorTemperature
         }
+    }
+
+    func toggleLight() {
+        isLightOn.toggle()
+        runPythonScript(command: isLightOn ? "on" : "off")
+    }
+    
+    func updateBrightness() {
+        runPythonScript(command: "brightness", value: Int(brightness))
+    }
+    
+    func updateColorTemperature() {
+        runPythonScript(command: "colortemp", value: Int(colorTemperature))
     }
 
     func saveLightStateToFile() {

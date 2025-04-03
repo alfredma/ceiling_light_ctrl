@@ -1,10 +1,13 @@
 //import Cocoa
 import SwiftUI
+import Combine
 
 class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     var statusItem: NSStatusItem?
-    let lightController = LightController() // 控制逻辑实例
     var window: NSWindow?
+    private var lightController = LightController.shared
+    private var cancellables = Set<AnyCancellable>()
+
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         // 创建状态栏图标
@@ -55,6 +58,43 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         menu.addItem(NSMenuItem(title: "Quit", action: #selector(quitApp), keyEquivalent: "q"))
 
         statusItem?.menu = menu
+
+        // 使用 Combine 监听数据变化
+        lightController.$brightness
+            .receive(on: RunLoop.main) // 主线程更新 UI
+            .sink { [weak self] newValue in
+                self?.updateBrightnessUI(newValue)
+            }
+            .store(in: &cancellables)
+        
+        lightController.$colorTemperature
+            .receive(on: RunLoop.main) // 主线程更新 UI
+            .sink { [weak self] newValue in
+                self?.updateColorTemperatureUI(newValue)
+            }
+            .store(in: &cancellables)
+    }
+
+    private func updateBrightnessUI(_ value: Double) {
+        if let menu = statusItem?.menu,
+           let brightnessItem = menu.items.first(where: { ($0.view?.subviews.contains { $0 is NSSlider }) ?? false }) {
+            // 更新滑动条和标签
+            DispatchQueue.main.async {
+                (brightnessItem.view?.subviews.first { $0 is NSSlider } as? NSSlider)?.doubleValue = value
+                (brightnessItem.view?.subviews.first { $0 is NSTextField } as? NSTextField)?.stringValue = "Brightness: \(Int(value))%"
+            }
+        }
+    }
+
+    private func updateColorTemperatureUI(_ value: Double) {
+        if let menu = statusItem?.menu,
+           let colorTempItem = menu.items.last(where: { ($0.view?.subviews.contains { $0 is NSSlider }) ?? false }) {
+            // 更新滑动条和标签
+            DispatchQueue.main.async {
+                (colorTempItem.view?.subviews.first { $0 is NSSlider } as? NSSlider)?.doubleValue = value
+                (colorTempItem.view?.subviews.first { $0 is NSTextField } as? NSTextField)?.stringValue = "Color Temperature: \(Int(value))K"
+            }
+        }
     }
 
     @objc func showWindow() {
@@ -178,7 +218,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     // 菜单弹出时更新滑动条状态
     func menuWillOpen(_ menu: NSMenu) {
         // 获取当前状态
-        lightController.refreshDeviceState()
+        LightController.shared.refreshDeviceState()
         let currentBrightness = lightController.getCurrentBrightness()
         let currentColorTemp = lightController.getCurrentColorTemperature()
         print("Current Brightness: \(currentBrightness)%")
