@@ -178,7 +178,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
 
         // 添加刻度
         let tickMarks = 5 // 5 等分
-        slider.numberOfTickMarks = tickMarks + 1 // 包括起点和终点
+        slider.numberOfTickMarks = 2*tickMarks + 1 // 包括起点和终点
         slider.allowsTickMarkValuesOnly = true
 
         // 添加刻度标签
