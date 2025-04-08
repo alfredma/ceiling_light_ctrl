@@ -115,19 +115,20 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     }
 
     @objc func turnOnLight() {
-        print("Turning on the light")
-        lightController.runPythonScript(command: "on")
+        lightController.isLightOn = true
+        lightController.toggleLight()
     }
 
     @objc func turnOffLight() {
-        print("Turning off the light")
-        lightController.runPythonScript(command: "off")
+        lightController.isLightOn = false
+        lightController.toggleLight()
     }
 
     @objc func brightnessChanged(_ sender: NSSlider) {
         let brightness = Int(sender.doubleValue)
         print("Brightness changed to \(brightness)%")
-        lightController.runPythonScript(command: "brightness", value: brightness)
+        lightController.brightness = Double(brightness)
+        lightController.updateBrightness()
 
         // 更新标题显示
         if let container = sender.superview as? NSStackView,
@@ -139,7 +140,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     @objc func colorTempChanged(_ sender: NSSlider) {
         let colorTemp = Int(sender.doubleValue)
         print("Color Temperature changed to \(colorTemp)K")
-        lightController.runPythonScript(command: "colortemp", value: colorTemp)
+        lightController.colorTemperature = Double(colorTemp)
+        lightController.updateColorTemperature()
 
         // 更新标题显示
         if let container = sender.superview as? NSStackView,
@@ -219,8 +221,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     func menuWillOpen(_ menu: NSMenu) {
         // 获取当前状态
         LightController.shared.refreshDeviceState()
-        let currentBrightness = lightController.getCurrentBrightness()
-        let currentColorTemp = lightController.getCurrentColorTemperature()
+        let currentBrightness = lightController.brightness
+        let currentColorTemp = lightController.colorTemperature
         print("Current Brightness: \(currentBrightness)%")
         print("Current Color Temperature: \(currentColorTemp)K")
 

@@ -136,24 +136,11 @@ struct ContentView: View {
             .padding()
         }
         .onAppear {
-            // 调用脚本获取灯的状态
-            if let result = lightController.runPythonScript(command: "get"),
-                let state = lightController.parseLightState(result: result) {
-                    print("Fetched light state: \(state)")
-            } else {
-                print("Failed to fetch light state. Using default values.")
-                // 设置默认值
-                lightController.isLightOn = true
-                lightController.brightness = 50
-                lightController.colorTemperature = 4000
-            }
+            lightController.refreshDeviceState()
             // Reload widget timelines when the app launches
             WidgetCenter.shared.reloadAllTimelines()
         }
     }
-    
-
-
 }
 
 #Preview {
