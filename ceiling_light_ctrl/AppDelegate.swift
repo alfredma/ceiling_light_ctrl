@@ -89,7 +89,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSWindowDele
         let tempItem = createSliderMenuItem(
             title: "Color Temperature",
             currentValue: lightController.colorTemperature,
-            range: 2700...6500,
+            range: 3500...6000,
             unit: "K",
             tag: 1002,
             action: #selector(colorTempChanged(_:))
@@ -108,7 +108,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSWindowDele
         let view = NSStackView()
         view.orientation = .vertical
         view.spacing = 8
-        view.edgeInsets = NSEdgeInsets(top: 8, left: 8, bottom: 8, right: 8)
+        view.edgeInsets = NSEdgeInsets(top: 8, left: 12, bottom: 8, right: 12)
         view.translatesAutoresizingMaskIntoConstraints = false // 添加约束
 
         // 标题标签（不再需要设置tag）
@@ -128,24 +128,46 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSWindowDele
         slider.controlSize = .small  // 使用更紧凑的尺寸
         slider.widthAnchor.constraint(equalToConstant: 180).isActive = true // 固定宽度
         
+        // 添加刻度
+        let tickMarks = 5 // 5 等分
+        slider.numberOfTickMarks = 2*tickMarks + 1 // 包括起点和终点
+        slider.allowsTickMarkValuesOnly = true
+
         // 刻度标签
         let tickStack = NSStackView()
-        tickStack.distribution = .equalCentering
+        tickStack.orientation = .horizontal
+        tickStack.distribution = .equalSpacing
+        //tickStack.distribution = .equalCentering
+        tickStack.translatesAutoresizingMaskIntoConstraints = false
         tickStack.widthAnchor.constraint(equalToConstant: 180).isActive = true // 对齐滑动条宽度
-
+        /*
         [range.lowerBound, (range.lowerBound + range.upperBound)/2, range.upperBound].forEach { value in
             let label = NSTextField(labelWithString: "\(Int(value))\(unit)")
             label.font = .systemFont(ofSize: 10)
             tickStack.addArrangedSubview(label)
+        }*/
+        for i in 0...tickMarks {
+            let tickValue = range.lowerBound + (range.upperBound - range.lowerBound) * Double(i) / Double(tickMarks)
+            let tickLabel = NSTextField(labelWithString: "\(Int(tickValue))")
+            tickLabel.alignment = .center
+            tickLabel.font = NSFont.systemFont(ofSize: 10)
+            tickLabel.textColor = .secondaryLabelColor
+            tickLabel.isEditable = false
+            tickLabel.isBordered = false
+            tickLabel.backgroundColor = .clear
+            tickStack.addArrangedSubview(tickLabel)
         }
         
         view.addArrangedSubview(titleLabel)
         view.addArrangedSubview(slider)
         view.addArrangedSubview(tickStack)
         
-        // 添加宽度约束
+        // 设置容器的宽度和高度
         NSLayoutConstraint.activate([
-            view.widthAnchor.constraint(equalToConstant: 220) // 固定整个菜单项宽度
+            view.widthAnchor.constraint(equalToConstant: 200), // 设置容器宽度
+            titleLabel.heightAnchor.constraint(equalToConstant: 20), // 设置标题高度
+            slider.heightAnchor.constraint(equalToConstant: 20), // 设置滑动条高度
+            tickStack.heightAnchor.constraint(equalToConstant: 15) // 设置刻度标签高度
         ])
 
         let item = NSMenuItem()
@@ -313,41 +335,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSWindowDele
         ])
 
         return container
-    }
-
-    // 菜单弹出时更新滑动条状态
-    func menuWillOpen(_ menu: NSMenu) {
-        // 获取当前状态
-        LightController.shared.refreshDeviceState()
-        let currentBrightness = lightController.brightness
-        let currentColorTemp = lightController.colorTemperature
-        print("Current Brightness: \(currentBrightness)%")
-        print("Current Color Temperature: \(currentColorTemp)K")
-
-        // 更新UI（确保在主线程）
-        DispatchQueue.main.async {
-            // 更新亮度滑动条
-            if let brightnessItem = menu.items.first(where: { ($0.view?.subviews.contains(where: { $0 is NSSlider }) ?? false) }) {
-                if let slider = brightnessItem.view?.subviews.compactMap({ $0 as? NSSlider }).first {
-                    slider.doubleValue = currentBrightness
-                    if let container = slider.superview as? NSStackView,
-                    let titleLabel = container.arrangedSubviews.first as? NSTextField {
-                        titleLabel.stringValue = "Brightness: \(Int(currentBrightness))%"
-                    }
-                }
-            }
-
-            // 更新色温滑动条
-            if let colorTempItem = menu.items.last(where: { ($0.view?.subviews.contains(where: { $0 is NSSlider }) ?? false) }) {
-                if let slider = colorTempItem.view?.subviews.compactMap({ $0 as? NSSlider }).first {
-                    slider.doubleValue = currentColorTemp
-                    if let container = slider.superview as? NSStackView,
-                    let titleLabel = container.arrangedSubviews.first as? NSTextField {
-                        titleLabel.stringValue = "Color Temperature: \(Int(currentColorTemp))K"
-                    }
-                }
-            }
-        }
     }*/
 }
 

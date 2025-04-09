@@ -27,16 +27,18 @@ class LightController: ObservableObject {
     }
     private func setupBindings() {
         $brightness
-            .dropFirst()
+            .dropFirst() // 1. 忽略初始值的第一次发布
+            .removeDuplicates() // 2. 新增：仅当数值变化时触发
             //取消属性监听的延迟，让每次滑动条变化立即触发更新
             //.debounce(for: 0.3, scheduler: RunLoop.main)
-            .sink { [weak self] _ in
+            .sink { [weak self] _ in // 3. 接收变化后的值
                 self?.updateBrightness()
             }
-            .store(in: &cancellables)
+            .store(in: &cancellables)  // 4. 存储订阅
         
         $colorTemperature
             .dropFirst()
+            .removeDuplicates() // 2. 新增：仅当数值变化时触发
             //取消属性监听的延迟，让每次滑动条变化立即触发更新
             //.debounce(for: 0.3, scheduler: RunLoop.main)
             .sink { [weak self] _ in

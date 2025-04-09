@@ -83,39 +83,55 @@ struct SmartSlider: View {
     
     var body: some View {
         VStack(alignment: .leading) {
-            // 标题
             Text("\(title): \(Int(value))\(unit)")
                 .font(.headline)
                 .padding(.horizontal)
+                .frame(maxWidth: .infinity, alignment: .center)
             
-            // 滑动条主体
             GeometryReader { geometry in
-                let sliderWidth = geometry.size.width
+                let totalWidth = geometry.size.width - 20 // 留出边距
+                let minValue = range.lowerBound
+                let maxValue = range.upperBound
                 
-                VStack(spacing: 4) {
-                    // 滑动条控件
-                    Slider(
-                        value: $value,
-                        in: range,
-                        step: Double(step),
-                    )
+                ZStack(alignment: .leading) {
+                    // 自定义轨道
+                    RoundedRectangle(cornerRadius: 2)
+                        .fill(Color.gray.opacity(0.2)) // 自定义轨道颜色
+                        .frame(height: 4)
                     
-                    // 刻度标签容器（关键修改）
-                    HStack(spacing: 0) {
-                        ForEach(marks, id: \.self) { mark in
-                            Text("\(mark)")
-                                .font(.caption)
-                                .frame(maxWidth: .infinity, alignment: .leading) // 均匀分布
-                        }
+                    // 主要刻度线
+                    ForEach(marks, id: \.self) { mark in
+                        let ratio = CGFloat(mark - Int(minValue)) / CGFloat(maxValue - minValue)
+                        Rectangle()
+                            .fill(Color.gray)
+                            .frame(width: 1, height: 12)
+                            .offset(x: ratio * totalWidth)
+                            .offset(y: -2)
                     }
-                    .padding(.horizontal, 4) // 补偿滑动条边距
+                    
+                    // 滑动条控件
+                    Slider(value: $value, in: range, step: Double(step))
+                        .accentColor(.blue) // 自定义滑块颜色
+                        .padding(.horizontal, 4)
                 }
-                .frame(width: sliderWidth) // 强制使用完整宽度
+                .frame(height: 30)
+                
+                // 刻度标签容器
+                HStack(spacing: 0) {
+                    ForEach(marks, id: \.self) { mark in
+                        Text("\(mark)")
+                            .font(.system(size: 10))
+                            .frame(width: mark == marks.last ? nil : totalWidth / CGFloat(marks.count - 1),
+                                   alignment: mark == marks.last ? .trailing : .leading)
+                            .offset(x: mark == marks.first ? 2 : (mark == marks.last ? -2 : 0))
+                    }
+                }
+                .padding(.horizontal, 8) // 标签容器边距
+                .offset(y: 15)
             }
-            .frame(height: 40) // 固定高度
+            .frame(height: 50) // 整体高度控制
         }
         .padding(.vertical, 8)
-        .frame(maxWidth: .infinity) // 关键：横向充满容器
     }
 }
 
