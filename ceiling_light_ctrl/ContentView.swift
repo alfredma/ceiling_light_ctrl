@@ -6,139 +6,96 @@
 //
 
 import SwiftUI
-import WidgetKit
 
 struct ContentView: View {
-    @Environment(\.scenePhase) private var scenePhase // 监听应用场景状态
-    @ObservedObject private var lightController = LightController.shared // 绑定单例
+    @ObservedObject var controller = LightController.shared
+    
+    var body: some View {
+        VStack(spacing: 20) {
+            HeaderView()
+            PowerButton()
+            ControlSliders()
+        }
+        .padding()
+        .frame(minWidth: 400, minHeight: 300)
+    }
+}
 
+private struct HeaderView: View {
+    var body: some View {
+        Text("卧室吸顶灯控制")
+            .font(.system(size: 24, weight: .semibold))
+            .padding(.bottom, 20)
+    }
+}
+
+private struct PowerButton: View {
+    @ObservedObject var controller = LightController.shared
+    
+    var body: some View {
+        Button(action: controller.togglePower) {
+            Text(controller.isOn ? "关闭灯光" : "开启灯光")
+                .frame(width: 120)
+                .padding(.vertical, 12)
+                .background(controller.isOn ? Color.blue : Color.orange)
+                .foregroundColor(.white)
+                .cornerRadius(8)
+        }
+        .buttonStyle(PlainButtonStyle())
+    }
+}
+
+private struct ControlSliders: View {
+    @ObservedObject var controller = LightController.shared
+    
+    var body: some View {
+        VStack(spacing: 25) {
+            SmartSlider(
+                title: "亮度",
+                value: $controller.brightness,
+                range: 1...100,
+                unit: "%",
+                marks: [1, 25, 50, 75, 100]
+            )
+            
+            SmartSlider(
+                title: "色温",
+                value: $controller.colorTemperature,
+                range: 1700...6500,
+                unit: "K",
+                marks: [1700, 3000, 4300, 5500, 6500]
+            )
+        }
+    }
+}
+
+struct SmartSlider: View {
+    let title: String
+    @Binding var value: Double
+    let range: ClosedRange<Double>
+    let unit: String
+    let marks: [Int]
+    
     var body: some View {
         VStack {
-            // 顶部标题
-            Text("卧室吸顶灯")
-                .font(.largeTitle)
-                .fontWeight(.bold)
-                .padding(.bottom, 20)
-
-            HStack(alignment: .center) {
-                // 开关按钮绑定
-                Button(lightController.isLightOn ? "Light Off" : "Light On") {
-                       lightController.toggleLight()
-                }
-                .padding()
-                .background(lightController.isLightOn ? Color.green : Color.red)
-                .foregroundColor(.white)
-                .cornerRadius(10)
-
-                Spacer()
-
-                // 滑动条部分
-                VStack(spacing: 20) {
-                    // 色温滑动条
-                    VStack {
-                        Text("Color Temperature: \(Int(lightController.colorTemperature))K")
-                            .font(.headline)
-                            .padding(.bottom, 10)
-
-                        ZStack {
-                            // 刻度线
-                            HStack(spacing: 0) {
-                                ForEach([2700, 3000, 4000, 5500, 6500], id: \.self) { temp in
-                                    VStack {
-                                        Rectangle()
-                                            .fill(Color.gray)
-                                            .frame(width: 1, height: temp == 3000 || temp == 4000 || temp == 5500 ? 20 : 10) // 长线和短线区分
-                                        Spacer()
-                                    }
-                                    if temp != 6500 { // 添加间隔，最后一个刻度不需要 Spacer
-                                        Spacer()
-                                    }
-                                }
-                            }
-                            .padding(.horizontal)
-
-                            // 滑动条
-                            Slider(
-                                value: $lightController.colorTemperature,
-                                in: 2700...6500,
-                                step: 100,
-                                onEditingChanged: { _ in
-                                    lightController.updateColorTemperature()
-                                }
-                            )
-                            .padding()
-                        }
-
-                        // 刻度标注
-                        HStack(spacing: 0) {
-                            ForEach([2700, 3000, 4000, 5500, 6500], id: \.self) { temp in
-                                Text("\(temp)K")
-                                    .font(.caption)
-                                    .frame(maxWidth: .infinity, alignment: .center) // 确保标注与刻度线对齐
-                            }
-                        }
-                        .padding(.horizontal)
-                    }
-                    .padding()
-                    .background(Color.gray.opacity(0.2))
-                    .cornerRadius(10)
-
-                    // 亮度滑动条
-                    VStack {
-                        Text("Brightness: \(Int(lightController.brightness))%")
-                            .font(.headline)
-                            .padding(.bottom, 10)
-
-                        ZStack {
-                            // 刻度线
-                            HStack(spacing: 0) {
-                                ForEach([0, 20, 40, 60, 80, 100], id: \.self) { level in
-                                    VStack {
-                                        Rectangle()
-                                            .fill(Color.gray)
-                                            .frame(width: 1, height: level % 20 == 0 ? 20 : 10) // 长线和短线区分
-                                        Spacer()
-                                    }
-                                    if level != 100 { // 添加间隔，最后一个刻度不需要 Spacer
-                                        Spacer()
-                                    }
-                                }
-                            }
-                            .padding(.horizontal)
-
-                            // 滑动条
-                            Slider(
-                                value: $lightController.brightness,
-                                in: 0...100,
-                                step: 5,
-                                onEditingChanged: { _ in
-                                    lightController.updateBrightness()
-                                }
-                            )
-                            .padding()
-                        }
-
-                        // 刻度标注
-                        HStack(spacing: 0) {
-                            ForEach([0, 20, 40, 60, 80, 100], id: \.self) { level in
-                                Text("\(level)%")
-                                    .font(.caption)
-                                    .frame(maxWidth: .infinity, alignment: .center) // 确保标注与刻度线对齐
-                            }
-                        }
-                        .padding(.horizontal)
-                    }
-                    .padding()
-                    .background(Color.gray.opacity(0.2))
-                    .cornerRadius(10)
+            Text("\(title): \(Int(value))\(unit)")
+                .font(.headline)
+            
+            Slider(
+                value: $value,
+                in: range,
+                step: (range.upperBound - range.lowerBound)/100
+            )
+            .padding(.horizontal)
+            
+            HStack {
+                ForEach(marks, id: \.self) { mark in
+                    Text("\(mark)")
+                        .font(.caption)
+                        .frame(maxWidth: .infinity)
                 }
             }
-            .padding()
-        }
-        .onAppear {
-            lightController.refreshDeviceState()
-            // Reload widget timelines when the app launches
-            WidgetCenter.shared.reloadAllTimelines()
+            .padding(.horizontal)
         }
     }
 }

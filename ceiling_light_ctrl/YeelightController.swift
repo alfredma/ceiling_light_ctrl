@@ -78,13 +78,13 @@ class YeelightController {
     }
 
     // 打开灯光
-    func turnOnLight() {
+    func turnOn() {
         let command = "{\"id\":1,\"method\":\"set_power\",\"params\":[\"on\",\"smooth\",500]}"
         _ = sendCommand(command)
     }
 
     // 关闭灯光
-    func turnOffLight() {
+    func turnOff() {
         let command = "{\"id\":1,\"method\":\"set_power\",\"params\":[\"off\",\"smooth\",500]}"
         _ = sendCommand(command)
     }

@@ -10,20 +10,20 @@ import SwiftUI
 @main
 struct ceiling_light_ctrlApp: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
-    //@Environment(\.scenePhase) private var scenePhase
 
     var body: some Scene {
-        WindowGroup {
-            ContentView()
+        Settings {
+            EmptyView()
+                .frame(width: 0, height: 0)
         }
-        /*
-        .windowStyle(DefaultWindowStyle())
-        .onChange(of: scenePhase) { _, newPhase in
-            if newPhase == .background {
-            NSApplication.shared.terminate(nil) // 完全退出应用程序
+        .windowStyle(.hiddenTitleBar)
+        .commands {
+            CommandMenu("调试") {
+                Button("强制刷新") {
+                    LightController.shared.refreshDeviceState()
+                }
+                .keyboardShortcut("r")
             }
-        }*/
+        }
     }
 }
-
-
