@@ -7,6 +7,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSWindowDele
     var window: NSWindow? // 改为强引用，防止窗口被意外释放
     private var lightController = LightController.shared
     private var cancellables = Set<AnyCancellable>()
+    // 全局标题存储
+    private var sliderTitleMap = [Int: String]()
 
     // MARK: - 应用生命周期
     func applicationDidFinishLaunching(_ notification: Notification) {
@@ -107,9 +109,11 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSWindowDele
         view.orientation = .vertical
         view.spacing = 8
         view.edgeInsets = NSEdgeInsets(top: 8, left: 8, bottom: 8, right: 8)
-        
+        view.translatesAutoresizingMaskIntoConstraints = false // 添加约束
+
         // 标题标签（不再需要设置tag）
         let titleLabel = NSTextField(labelWithString: "\(title): \(Int(currentValue))\(unit)")
+        sliderTitleMap[tag] = title // 关键：存储原始标题
         titleLabel.font = .systemFont(ofSize: 12, weight: .medium)
         titleLabel.isEditable = false
         titleLabel.isBordered = false
@@ -121,10 +125,14 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSWindowDele
                              target: self,
                              action: action)
         slider.isContinuous = true
+        slider.controlSize = .small  // 使用更紧凑的尺寸
+        slider.widthAnchor.constraint(equalToConstant: 180).isActive = true // 固定宽度
         
         // 刻度标签
         let tickStack = NSStackView()
         tickStack.distribution = .equalCentering
+        tickStack.widthAnchor.constraint(equalToConstant: 180).isActive = true // 对齐滑动条宽度
+
         [range.lowerBound, (range.lowerBound + range.upperBound)/2, range.upperBound].forEach { value in
             let label = NSTextField(labelWithString: "\(Int(value))\(unit)")
             label.font = .systemFont(ofSize: 10)
@@ -135,6 +143,11 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSWindowDele
         view.addArrangedSubview(slider)
         view.addArrangedSubview(tickStack)
         
+        // 添加宽度约束
+        NSLayoutConstraint.activate([
+            view.widthAnchor.constraint(equalToConstant: 220) // 固定整个菜单项宽度
+        ])
+
         let item = NSMenuItem()
         item.view = view
         item.tag = tag // 关键修改：设置菜单项本身的tag
@@ -175,7 +188,9 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSWindowDele
         
         DispatchQueue.main.async {
             slider.doubleValue = value
-            titleLabel.stringValue = "\(titleLabel.stringValue.components(separatedBy: ":")[0]): \(Int(value))\(unit)"
+            // 通过存储的标题更新
+            let titlePrefix = self.sliderTitleMap[tag] ?? "Unknown"
+            titleLabel.stringValue = "\(titlePrefix): \(Int(value))\(unit)"
         }
     }
 
@@ -212,11 +227,16 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSWindowDele
     }
     
     @objc private func brightnessChanged(_ sender: NSSlider) {
+        let value = sender.doubleValue
         lightController.setBrightness(Double(sender.doubleValue))
+        // 立即更新状态栏菜单标题
+        updateSliderValue(value, forTag: 1001, unit: "%")
     }
     
     @objc private func colorTempChanged(_ sender: NSSlider) {
-        lightController.setColorTemperature(Double(sender.doubleValue))
+        let value = sender.doubleValue
+        lightController.setColorTemperature(value)
+        updateSliderValue(value, forTag: 1002, unit: "K")
     }
     
     @objc private func quitApp() {

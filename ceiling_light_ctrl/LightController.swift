@@ -28,7 +28,8 @@ class LightController: ObservableObject {
     private func setupBindings() {
         $brightness
             .dropFirst()
-            .debounce(for: 0.3, scheduler: RunLoop.main)
+            //取消属性监听的延迟，让每次滑动条变化立即触发更新
+            //.debounce(for: 0.3, scheduler: RunLoop.main)
             .sink { [weak self] _ in
                 self?.updateBrightness()
             }
@@ -36,12 +37,14 @@ class LightController: ObservableObject {
         
         $colorTemperature
             .dropFirst()
-            .debounce(for: 0.3, scheduler: RunLoop.main)
+            //取消属性监听的延迟，让每次滑动条变化立即触发更新
+            //.debounce(for: 0.3, scheduler: RunLoop.main)
             .sink { [weak self] _ in
                 self?.updateColorTemperature()
             }
             .store(in: &cancellables)
     }
+    // 刷新设备状态
     func refreshDeviceState() {
         DispatchQueue.global().async { [weak self] in
             guard let self = self else { return }
@@ -69,16 +72,21 @@ class LightController: ObservableObject {
         yeelight.turnOff()
         isOn = false
     }
-
+    // 设置并更新亮度和色温
     func setBrightness(_ value: Double) {
+        print("Setting brightness to \(value)")
         brightness = value.clamped(to: 1...100)
+        updateBrightness()
     }
     
     func setColorTemperature(_ value: Double) {
         colorTemperature = value.clamped(to: 1700...6500)
+        updateColorTemperature()
     }
 
-    func updateBrightness() {
+    // 使用本地数值设置亮度和色温
+    private func updateBrightness() {
+        print("Updating brightness to \(brightness)")
         brightnessUpdateWorkItem?.cancel() // 取消之前的任务
         let workItem = DispatchWorkItem { [weak self] in
             guard let self = self else { return }
@@ -88,7 +96,7 @@ class LightController: ObservableObject {
         DispatchQueue.global().asyncAfter(deadline: .now() + 0.3, execute: workItem) // 延迟 0.3 秒执行
     }
 
-    func updateColorTemperature() {
+    private func updateColorTemperature() {
         colorTemperatureUpdateWorkItem?.cancel() // 取消之前的任务
         let workItem = DispatchWorkItem { [weak self] in
             guard let self = self else { return }
