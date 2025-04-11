@@ -20,6 +20,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSWindowDele
         setupSubscriptions()
         // 设置Dock图标策略
         NSApp.setActivationPolicy(.regular)
+        // 保持常规激活策略但隐藏不需要的界面元素
+        // NSApp.setActivationPolicy(.accessory)
     }
 
     // MARK: - 窗口配置
@@ -42,6 +44,12 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSWindowDele
         window.contentView = contentView
         window.contentMinSize = NSSize(width: 600, height: 400)
         window.isReleasedWhenClosed = false
+        /*
+         * canJoinAllSpaces: 允许窗口在所有桌面空间显示
+         * transient: 防止窗口出现在 Mission Control 作为独立窗口
+        */
+        window.collectionBehavior = [.canJoinAllSpaces, .transient, .fullScreenNone]
+        window.isExcludedFromWindowsMenu = true
         window.delegate = self
         return window
     }
@@ -66,7 +74,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSWindowDele
         menu.delegate = self
         
         // 添加菜单项
-        menu.addItem(NSMenuItem(title: "Show Window", action: #selector(toggleWindow), keyEquivalent: "w"))
+        menu.addItem(NSMenuItem(title: "Show Window", action: #selector(showWindow), keyEquivalent: "w"))
         menu.addItem(NSMenuItem.separator())
         
         // 灯光控制
@@ -218,7 +226,10 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSWindowDele
 
     // MARK: - 窗口管理
     func windowShouldClose(_ sender: NSWindow) -> Bool {
+        // 保持常规激活策略但隐藏不需要的界面元素,隐藏dock图标
+        NSApp.setActivationPolicy(.accessory)
         sender.orderOut(nil)
+        NSApp.hide(nil) // 隐藏整个应用
         return false
     }
     
@@ -226,15 +237,33 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSWindowDele
         guard let window = window else { return }
         
         if window.isVisible {
+            // 隐藏窗口时保持辅助模式
             window.orderOut(nil)
             NSApp.hide(nil)
         } else {
-            window.center()
-            window.makeKeyAndOrderFront(nil)
+            // 临时切换为常规应用激活策略
+            NSApp.setActivationPolicy(.regular)
+            // 强制激活应用并显示窗口
             NSApp.activate(ignoringOtherApps: true)
+            window.makeKeyAndOrderFront(nil)
+            window.center()
+            // 延迟恢复辅助模式避免 Dock 图标残留
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                NSApp.setActivationPolicy(.accessory)
+            }
         }
     }
-    
+
+    @objc private func showWindow() {
+        guard let window = window else { return }
+        //if window.isVisible {
+            // 切换为常规应用激活策略
+            NSApp.setActivationPolicy(.regular)
+            // 强制显示
+            NSApp.activate(ignoringOtherApps: true)
+            window.makeKeyAndOrderFront(nil)
+        //}
+    }
     // MARK: - 用户交互
     @objc private func toggleMenu(_ sender: NSStatusBarButton) {
         statusItem?.menu?.popUp(positioning: nil, at: .zero, in: sender)
