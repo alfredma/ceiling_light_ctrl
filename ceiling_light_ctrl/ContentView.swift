@@ -95,39 +95,40 @@ struct SmartSlider: View {
                 
                 ZStack(alignment: .leading) {
                     // 自定义轨道
-                    RoundedRectangle(cornerRadius: 2)
-                        .fill(Color.gray.opacity(0.2)) // 自定义轨道颜色
-                        .frame(height: 4)
+                    //RoundedRectangle(cornerRadius: 2)
+                    //    .fill(Color.gray.opacity(0.2)) // 自定义轨道颜色
+                    //    .frame(height: 4)
                     
                     // 主要刻度线
                     ForEach(marks, id: \.self) { mark in
                         let ratio = CGFloat(mark - Int(minValue)) / CGFloat(maxValue - minValue)
                         Rectangle()
                             .fill(Color.gray)
-                            .frame(width: 1, height: 12)
-                            .offset(x: ratio * totalWidth)
+                            .frame(width: 2, height: 16)
+                            .offset(x: ratio * totalWidth + 4)
                             .offset(y: -2)
                     }
                     
                     // 滑动条控件
                     Slider(value: $value, in: range, step: Double(step))
                         .accentColor(.blue) // 自定义滑块颜色
-                        .padding(.horizontal, 4)
+                        .padding(.horizontal, 6.0)
+                        .frame(width: geometry.size.width-8)
                 }
                 .frame(height: 30)
                 
                 // 刻度标签容器
-                HStack(spacing: 0) {
+                HStack(alignment: .top, spacing: 4.0) {
                     ForEach(marks, id: \.self) { mark in
                         Text("\(mark)")
                             .font(.system(size: 10))
-                            .frame(width: mark == marks.last ? nil : totalWidth / CGFloat(marks.count - 1),
-                                   alignment: mark == marks.last ? .trailing : .leading)
-                            .offset(x: mark == marks.first ? 2 : (mark == marks.last ? -2 : 0))
+                            .frame(width: mark == marks.first ? 30 : totalWidth / CGFloat(marks.count-1),
+                                   alignment: mark == marks.first ? .leading:.trailing)
+                            .offset(x: mark != marks.first ? -36: 0)
                     }
                 }
-                .padding(.horizontal, 8) // 标签容器边距
-                .offset(y: 15)
+                .padding(.horizontal, 4.0) // 标签容器边距
+                .offset(y: 20)
             }
             .frame(height: 50) // 整体高度控制
         }
